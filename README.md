@@ -5,7 +5,7 @@ CBAM(Convolutional Block Attention Module) implementation on TensowFlow2.0
 
 ## 二. CBAM的网络结构
 ### 2.1. 总体的描述
-<font   color=black> 对于一个中间层的$\mathbf{F} \in \mathbb{R}^{C \times H \times W}$，CBAM将会顺序推理出1维的channel attention map $\mathbf M_{c} \in \mathbb{R}^{C  \times 1  \times 1}$ 以及2维的spatial attention map $\mathbf M_{s} \in \mathbb{R}^{1 \times H  \times W}$，整个过程如下所示：
+<font   color=black> 对于一个中间层的\mathbf{F} \in \mathbb{R}^{C \times H \times W}，CBAM将会顺序推理出1维的channel attention map $\mathbf M_{c} \in \mathbb{R}^{C  \times 1  \times 1}$ 以及2维的spatial attention map $\mathbf M_{s} \in \mathbb{R}^{1 \times H  \times W}$，整个过程如下所示：
 <font color=black> $$
 \mathbf{F}^{\prime}=\mathbf{M}_{\mathbf{c}}(\mathbf{F}) \otimes \mathbf{F}\tag{1}
 $$ $$
