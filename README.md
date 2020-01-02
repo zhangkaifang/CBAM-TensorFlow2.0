@@ -11,7 +11,7 @@
 ## 二. CBAM的网络结构
 ### 2.1. 总体的描述
 
-- 对于一个中间层的$\mathbf F \in \mathbb{R}^{C \times H \times W}$，CBAM将会顺序推理出1维的channel attention map $\mathbf M_{c} \in \mathbb{R}^{C  \times 1  \times 1}$ 以及2维的spatial attention map $\mathbf M_{s} \in \mathbb{R}^{1 \times H  \times W}$，整个过程如下所示：$$\mathbf{F}^{\prime}=\mathbf{M}_{\mathbf{c}}(\mathbf{F}) \otimes \mathbf{F}\tag{1}$$  $$ \mathbf{F}^{\prime \prime}=\mathbf{M}_{\mathbf{s}}\left(\mathbf{F}^{\prime}\right) \otimes \mathbf{F}^{\prime}\tag{2}$$ 
+- 对于一个中间层的$\mathbf F \in \mathbb{R}^{C \times H \times W}$，CBAM将会顺序推理出1维的channel attention map $\mathbf M_{c} \in \mathbb{R}^{C  \times 1  \times 1}$ 以及2维的spatial attention map $\mathbf M_{s} \in \mathbb{R}^{1 \times H  \times W}$，整个过程如下所示： $$\mathbf{F}^{\prime}=\mathbf{M}_{\mathbf{c}}(\mathbf{F}) \otimes \mathbf{F}\tag{1}$$   $$\mathbf{F}^{\prime  \prime}=\mathbf{M}_{\mathbf{s}}\left(\mathbf{F}^{\prime}\right) \otimes \mathbf{F}^{\prime}\tag{2}$$ 
 - **其中：** $⊗$为element-wise multiplication，首先将channel attention map与输入的feature map相乘得到 $\mathbf{F}^{\prime}$， 之后计算 $\mathbf{F}^{\prime}$ 的spatial attention map，并将两者相乘得到最终的输出 $\mathbf{F}^{\prime \prime}$。
 
 <center><image src="https://github.com/kobiso/CBAM-keras/blob/master/figures/overview.png?raw=true" width="100%">
@@ -20,8 +20,8 @@
 ### 2.2. 通道注意力机制
 
 - 首先是通道注意力，我们知道一张图片经过几个卷积层会得到一个特征矩阵，这个矩阵的通道数就是卷积层核的个数。那么，一个常见的卷积核经常达到1024，2048个，并不是每个通道都对于信息传递非常有用了的。因此，通过对这些通道进行过滤，也就是注意，来得到优化后的特征。
-<font   color=black>**主要思路就是：增大有效通道权重，减少无效通道的权重。** 公式表示为如下：$$\begin{aligned}
-\mathbf{M}_{\mathbf{c}}(\mathbf{F}) &=\sigma(\text{MLP(AvgPool}(\mathbf{F}))+\text{MLP}(\operatorname{MaxPool} (\mathbf{F}))) \\
+<font   color=black>**主要思路就是：增大有效通道权重，减少无效通道的权重。** 公式表示为如下：
+ $$\begin{aligned} \mathbf{M}_{\mathbf{c}}(\mathbf{F}) &=\sigma(\text{MLP(AvgPool}(\mathbf{F}))+\text{MLP}(\operatorname{MaxPool} (\mathbf{F}))) \\ 
 &=\sigma\left(\mathbf{W}_{\mathbf{1}}(\mathbf{W}_{\mathbf{0}}(\mathbf{F}_{\text {avg }}^{\mathbf{c}}))+\mathbf{W}_{\mathbf{1}}\left(\mathbf{W}_{\mathbf{0}}\left(\mathbf{F}_{\max }^{\mathbf{c}}\right)\right)\right)\tag{3}
 \end{aligned}$$ 
 
