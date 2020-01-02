@@ -15,7 +15,7 @@
 <img src="https://latex.codecogs.com/gif.latex?$$\mathbf{F}^{\prime}=\mathbf{M}_{\mathbf{c}}(\mathbf{F})&space;\otimes&space;\mathbf{F}\tag{1}$$" title="$$\mathbf{F}^{\prime}=\mathbf{M}_{\mathbf{c}}(\mathbf{F}) \otimes \mathbf{F}\tag{1}$$" />
 <img src="https://latex.codecogs.com/gif.latex?$$\mathbf{F}^{\prime&space;\prime}=\mathbf{M}_{\mathbf{s}}\left(\mathbf{F}^{\prime}\right)&space;\otimes&space;\mathbf{F}^{\prime}\tag{2}$$" title="$$\mathbf{F}^{\prime \prime}=\mathbf{M}_{\mathbf{s}}\left(\mathbf{F}^{\prime}\right) \otimes \mathbf{F}^{\prime}\tag{2}$$" />
 
-- **其中：** <img src="https://latex.codecogs.com/gif.latex?$⊗$" title="$⊗$" />为element-wise multiplication，首先将channel attention map与输入的feature map相乘得到 <img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime}$" title="$\mathbf{F}^{\prime}$" />， 之后计算<img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime}$" title="$\mathbf{F}^{\prime}$" /> 的spatial attention map，并将两者相乘得到最终的输出 <img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime&space;\prime}$" title="$\mathbf{F}^{\prime \prime}$" />。
+- **其中：** <img src="https://latex.codecogs.com/gif.latex?$\bigotimes$" title="$\bigotimes$" />为element-wise multiplication，首先将channel attention map与输入的feature map相乘得到 <img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime}$" title="$\mathbf{F}^{\prime}$" />， 之后计算<img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime}$" title="$\mathbf{F}^{\prime}$" /> 的spatial attention map，并将两者相乘得到最终的输出 <img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime&space;\prime}$" title="$\mathbf{F}^{\prime \prime}$" />。
 
 <center><image src="https://github.com/kobiso/CBAM-keras/blob/master/figures/overview.png?raw=true" width="100%">
      
