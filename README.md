@@ -12,9 +12,10 @@ $$ $$
 \mathbf{F}^{\prime \prime}=\mathbf{M}_{\mathbf{s}}\left(\mathbf{F}^{\prime}\right) \otimes \mathbf{F}^{\prime}\tag{2}
 $$ **其中：** $⊗$为element-wise multiplication，首先将channel attention map与输入的feature map相乘得到 $\mathbf{F}^{\prime}$， 之后计算 $\mathbf{F}^{\prime}$ 的spatial attention map，并将两者相乘得到最终的输出 $\mathbf{F}^{\prime \prime}$。
 
-<center><image src="https://img-blog.csdnimg.cn/201912301438348.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
-
-
+<center><image src="https://img-blog.csdnimg.cn/20200102234830810.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
+     
+    
+ 
 ### 2.2. 通道注意力机制
 <font   color=black> 首先是通道注意力，我们知道一张图片经过几个卷积层会得到一个特征矩阵，这个矩阵的通道数就是卷积层核的个数。那么，一个常见的卷积核经常达到1024，2048个，并不是每个通道都对于信息传递非常有用了的。因此，通过对这些通道进行过滤，也就是注意，来得到优化后的特征。
 <font   color=black>**主要思路就是：增大有效通道权重，减少无效通道的权重。** 公式表示为如下：$$
@@ -26,8 +27,9 @@ $$ **其中：** $\mathbf{F}_{\text {avg}}^\mathbf{c}$ 和 $\mathbf{F}_{\text {m
  **此外：** 共享网络是由一个隐藏层和多层感知机(MLP)组成。为了减少参数开销，隐藏的激活大小设置为 $\mathbb{R}^{C / r \times 1 \times 1}$，其中 $r$ 是压缩率。在将共享网络应用于矢量之后，我们使用**逐元素求和**来合并输出特征向量。
 
 
-<center><image src="https://img-blog.csdnimg.cn/20191230145340134.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
-
+<center><image src=" https://img-blog.csdnimg.cn/2020010223493014.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
+   
+  
 <font   color=black>**注意：** 这里非常像SENet，SENet在很多论文中都被证实对效果有提升，这里的区别是，SENet采用的是平均值的pooling，这篇论文又加入了最大值pooling。作者在论文中，通过对比实验，证实max pooling提高了效果。这里的mlp的中间层较小，这个可能有助于信息的整合。
 
 - <font   color=black><font   color=blue>**通道注意力模块代码(方式1)**</font>，推荐使用这种，这样喂入数据可以是None，就是可以自适应。
@@ -148,7 +150,7 @@ class ChannelAttention(layers.Layer):
 \end{aligned}
 $$
 
-<center><image src="https://img-blog.csdnimg.cn/2019123014591351.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
+<center><image src="https://img-blog.csdnimg.cn/20200102235023296.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
 
 <font   color=black>**注意：** 这里同样使用了avg-pooling和max-pooling来对信息进行评估，使用一个 $7×7$ 的卷积来进行提取。注意权重都通过<font   color=blue>**sigmoid**来进行归一化</font>。
 
@@ -193,4 +195,4 @@ class SpatialAttention(layers.Layer):
 ## 三. Tensorflow2.0+ResNet18+CIFAR100实战
 ### 3.1. Biasblock结构图
 - <font   color=black>将模型应用到每一个ResNet block的输出上。
-<center><image src="https://img-blog.csdnimg.cn/20191230150241939.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
+<center><image src="https://img-blog.csdnimg.cn/20200102235102746.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
