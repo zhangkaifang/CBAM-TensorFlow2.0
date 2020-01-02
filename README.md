@@ -15,7 +15,7 @@ $$ $$
 \mathbf{F}^{\prime \prime}=\mathbf{M}_{\mathbf{s}}\left(\mathbf{F}^{\prime}\right) \otimes \mathbf{F}^{\prime}\tag{2}
 $$ **其中：** $⊗$为element-wise multiplication，首先将channel attention map与输入的feature map相乘得到 $\mathbf{F}^{\prime}$， 之后计算 $\mathbf{F}^{\prime}$ 的spatial attention map，并将两者相乘得到最终的输出 $\mathbf{F}^{\prime \prime}$。
 
-<center><image src="https://img-blog.csdnimg.cn/20200102234830810.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
+<center><image src="https://github.com/kobiso/CBAM-keras/blob/master/figures/overview.png?raw=true" width="100%">
      
     
 ### 2.2. 通道注意力机制
