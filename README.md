@@ -29,7 +29,7 @@ $$ **其中：** $\mathbf{F}_{\text {avg}}^\mathbf{c}$ 和 $\mathbf{F}_{\text {m
  **此外：** 共享网络是由一个隐藏层和多层感知机(MLP)组成。为了减少参数开销，隐藏的激活大小设置为 $\mathbb{R}^{C / r \times 1 \times 1}$，其中 $r$ 是压缩率。在将共享网络应用于矢量之后，我们使用**逐元素求和**来合并输出特征向量。
 
 
-<center><image src="https://img-blog.csdnimg.cn/2020010223493014.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
+<center><image src="https://github.com/kobiso/CBAM-keras/blob/master/figures/submodule.png" width="100%">
    
   
 <font   color=black>**注意：** 这里非常像SENet，SENet在很多论文中都被证实对效果有提升，这里的区别是，SENet采用的是平均值的pooling，这篇论文又加入了最大值pooling。作者在论文中，通过对比实验，证实max pooling提高了效果。这里的mlp的中间层较小，这个可能有助于信息的整合。
@@ -152,7 +152,7 @@ class ChannelAttention(layers.Layer):
 \end{aligned}
 $$
 
-<center><image src="https://img-blog.csdnimg.cn/20200102235023296.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
+<center><image src="https://github.com/kobiso/CBAM-keras/raw/master/figures/submodule.png" width="100%">
 
 <font   color=black>**注意：** 这里同样使用了avg-pooling和max-pooling来对信息进行评估，使用一个 $7×7$ 的卷积来进行提取。注意权重都通过<font   color=blue>**sigmoid**来进行归一化</font>。
 
