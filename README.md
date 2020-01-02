@@ -1,12 +1,12 @@
 # CBAM-TensorFlow2.0
 CBAM(Convolutional Block Attention Module) implementation on TensowFlow2.0
 ## 一. 论文摘要
-><font   color=black> 我们提出了卷积块注意模块(CBAM)，这是一个简单而有效的前馈卷积神经网络注意模块。在给定中间特征图的情况下，我们的模块按照通道和空间两个独立的维度依次推断注意图，然后将注意图乘入输入特征图进行自适应特征细化。因为CBAM是一个轻量级的通用模块，它可以无缝地集成到任何CNN架构中，开销可以忽略不计，并且可以与基本CNNs一起进行端到端的培训。我们通过在ImageNet-1K、MS COCO检测和VOC 2007检测数据集上的大量实验来验证我们的CBAM。我们的实验表明，在不同的模型下，分类和检测性能都得到了一致的提高，说明了CBAM的广泛适用性。
+<font   color=black> 我们提出了卷积块注意模块(CBAM)，这是一个简单而有效的前馈卷积神经网络注意模块。在给定中间特征图的情况下，我们的模块按照通道和空间两个独立的维度依次推断注意图，然后将注意图乘入输入特征图进行自适应特征细化。因为CBAM是一个轻量级的通用模块，它可以无缝地集成到任何CNN架构中，开销可以忽略不计，并且可以与基本CNNs一起进行端到端的培训。我们通过在ImageNet-1K、MS COCO检测和VOC 2007检测数据集上的大量实验来验证我们的CBAM。我们的实验表明，在不同的模型下，分类和检测性能都得到了一致的提高，说明了CBAM的广泛适用性。
 
 ## 二. CBAM的网络结构
 ### 2.1. 总体的描述
-><font   color=black> 对于一个中间层的Feature map $\mathbf F \in \mathbb{R}^{C  \times H \times W}$，CBAM将会顺序推理出1维的channel attention map $\mathbf M_{c} \in \mathbb{R}^{C  \times 1  \times 1}$ 以及2维的spatial attention map $\mathbf M_{s} \in \mathbb{R}^{1 \times H  \times W}$，整个过程如下所示：
-> <font color=black> $$
+<font   color=black> 对于一个中间层的Feature map $\mathbf F \in \mathbb{R}^{C  \times H \times W}$，CBAM将会顺序推理出1维的channel attention map $\mathbf M_{c} \in \mathbb{R}^{C  \times 1  \times 1}$ 以及2维的spatial attention map $\mathbf M_{s} \in \mathbb{R}^{1 \times H  \times W}$，整个过程如下所示：
+<font color=black> $$
 \mathbf{F}^{\prime}=\mathbf{M}_{\mathbf{c}}(\mathbf{F}) \otimes \mathbf{F}\tag{1}
 $$ $$
 \mathbf{F}^{\prime \prime}=\mathbf{M}_{\mathbf{s}}\left(\mathbf{F}^{\prime}\right) \otimes \mathbf{F}^{\prime}\tag{2}
@@ -16,8 +16,8 @@ $$ **其中：** $⊗$为element-wise multiplication，首先将channel attentio
 
 
 ### 2.2. 通道注意力机制
-><font   color=black> 首先是通道注意力，我们知道一张图片经过几个卷积层会得到一个特征矩阵，这个矩阵的通道数就是卷积层核的个数。那么，一个常见的卷积核经常达到1024，2048个，并不是每个通道都对于信息传递非常有用了的。因此，通过对这些通道进行过滤，也就是注意，来得到优化后的特征。
-> <font   color=black>**主要思路就是：增大有效通道权重，减少无效通道的权重。** 公式表示为如下：$$
+<font   color=black> 首先是通道注意力，我们知道一张图片经过几个卷积层会得到一个特征矩阵，这个矩阵的通道数就是卷积层核的个数。那么，一个常见的卷积核经常达到1024，2048个，并不是每个通道都对于信息传递非常有用了的。因此，通过对这些通道进行过滤，也就是注意，来得到优化后的特征。
+<font   color=black>**主要思路就是：增大有效通道权重，减少无效通道的权重。** 公式表示为如下：$$
 \begin{aligned}
 \mathbf{M}_{\mathbf{c}}(\mathbf{F}) &=\sigma(\text{MLP(AvgPool}(\mathbf{F}))+\text{MLP}(\operatorname{MaxPool} (\mathbf{F}))) \\
 &=\sigma\left(\mathbf{W}_{\mathbf{1}}(\mathbf{W}_{\mathbf{0}}(\mathbf{F}_{\text {avg }}^{\mathbf{c}}))+\mathbf{W}_{\mathbf{1}}\left(\mathbf{W}_{\mathbf{0}}\left(\mathbf{F}_{\max }^{\mathbf{c}}\right)\right)\right)\tag{3}
@@ -28,9 +28,9 @@ $$ **其中：** $\mathbf{F}_{\text {avg}}^\mathbf{c}$ 和 $\mathbf{F}_{\text {m
 
 <center><image src="https://img-blog.csdnimg.cn/20191230145340134.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="85%">
 
-> <font   color=black>**注意：** 这里非常像SENet，SENet在很多论文中都被证实对效果有提升，这里的区别是，SENet采用的是平均值的pooling，这篇论文又加入了最大值pooling。作者在论文中，通过对比实验，证实max pooling提高了效果。这里的mlp的中间层较小，这个可能有助于信息的整合。
+<font   color=black>**注意：** 这里非常像SENet，SENet在很多论文中都被证实对效果有提升，这里的区别是，SENet采用的是平均值的pooling，这篇论文又加入了最大值pooling。作者在论文中，通过对比实验，证实max pooling提高了效果。这里的mlp的中间层较小，这个可能有助于信息的整合。
 
-> - <font   color=black><font   color=blue>**通道注意力模块代码(方式1)**</font>，推荐使用这种，这样喂入数据可以是None，就是可以自适应。
+- <font   color=black><font   color=blue>**通道注意力模块代码(方式1)**</font>，推荐使用这种，这样喂入数据可以是None，就是可以自适应。
 ```powershell
 class ChannelAttention(layers.Layer):
     def __init__(self, in_planes, ratio=16):
@@ -55,7 +55,7 @@ class ChannelAttention(layers.Layer):
 
         return out
 ```
-> - <font   color=black><font   color=blue>**通道注意力模块代码(方式2)**</font>，更推荐使用这种，这样喂入数据可以是None，就是可以自适应。
+- <font   color=black><font   color=blue>**通道注意力模块代码(方式2)**</font>，更推荐使用这种，这样喂入数据可以是None，就是可以自适应。
 
 ```powershell
 class ChannelAttention(layers.Layer):
@@ -85,7 +85,7 @@ class ChannelAttention(layers.Layer):
         return out
 ```
 
->  - <font   color=black><font   color=blue>**通道注意力模块代码(方式3)**</font>，喂入数据的时候时候需要指定具体的batchsz值。
+ - <font   color=black><font   color=blue>**通道注意力模块代码(方式3)**</font>，喂入数据的时候时候需要指定具体的batchsz值。
 
 ```powershell
 class ChannelAttention(layers.Layer):
@@ -110,7 +110,9 @@ class ChannelAttention(layers.Layer):
 
         return out
 ```
->  - <font   color=black><font   color=blue>**通道注意力模块代码(方式4)**</font>，使用 $1×1$ 卷积替换全连接层。
+
+- <font   color=black><font   color=blue>**通道注意力模块代码(方式4)**</font>，使用 $1×1$ 卷积替换全连接层。
+    
 ```powershell
 class ChannelAttention(layers.Layer):
     def __init__(self, in_planes, ratio=16):
@@ -138,8 +140,8 @@ class ChannelAttention(layers.Layer):
 ```
 
 ### 2.3. 空间注意力机制
-><font   color=black> 论文中，作者认为通道注意力关注的是：what，然而空间注意力关注的是：where。
-> <font   color=black>$$
+<font   color=black> 论文中，作者认为通道注意力关注的是：what，然而空间注意力关注的是：where。
+<font   color=black>$$
 \begin{aligned}
 \mathbf{M}_{\mathbf{s}}(\mathbf{F}) &=\sigma\left(f^{7 \times 7}(\left[\text {AvgPool}(\mathbf{F}) ; \text {MaxPool}(\mathbf{F})]\right))\right) \\
 &=\sigma\left(f^{7 \times 7}\left(\left[\mathbf{F}_{\text {avg }}^{\mathrm{s}} ; \mathbf{F}_{\text {max }}^{\mathrm{s}}\right]\right)\right)\tag{4}
@@ -148,9 +150,9 @@ $$
 
 <center><image src="https://img-blog.csdnimg.cn/2019123014591351.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="70%">
 
-> <font   color=black>**注意：** 这里同样使用了avg-pooling和max-pooling来对信息进行评估，使用一个 $7×7$ 的卷积来进行提取。注意权重都通过<font   color=blue>**sigmoid**来进行归一化</font>。
+<font   color=black>**注意：** 这里同样使用了avg-pooling和max-pooling来对信息进行评估，使用一个 $7×7$ 的卷积来进行提取。注意权重都通过<font   color=blue>**sigmoid**来进行归一化</font>。
 
-> - <font   color=black><font   color=blue>**空间注意力模块代码(方式1)**</font>，推荐使用这种，这样喂入数据可以是None，就是可以自适应。
+- <font   color=black><font   color=blue>**空间注意力模块代码(方式1)**</font>，推荐使用这种，这样喂入数据可以是None，就是可以自适应。
 
 
 ```powershell
@@ -168,7 +170,7 @@ class SpatialAttention(layers.Layer):
         return out
 ```
 
-> - <font   color=black><font   color=blue>**空间注意力模块代码(方式2)**</font>，喂入数据的时候时候需要指定具体的batchsz值。
+- <font   color=black><font   color=blue>**空间注意力模块代码(方式2)**</font>，喂入数据的时候时候需要指定具体的batchsz值。
 
 ```powershell
 class SpatialAttention(layers.Layer):
@@ -190,5 +192,5 @@ class SpatialAttention(layers.Layer):
 
 ## 三. Tensorflow2.0+ResNet18+CIFAR100实战
 ### 3.1. Biasblock结构图
-> - <font   color=black>将模型应用到每一个ResNet block的输出上。
+- <font   color=black>将模型应用到每一个ResNet block的输出上。
 <center><image src="https://img-blog.csdnimg.cn/20191230150241939.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="80%">
