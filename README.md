@@ -1,5 +1,8 @@
-# CBAM-TensorFlow2.0
+## CBAM-TensorFlow2.0
 CBAM(Convolutional Block Attention Module) implementation on TensowFlow2.0
+
+- <font color=black> 本论文来自ECCV2018，主要在传统的CNN上引入通道注意力机制和空间注意力机制提升性能。论文地址：[CBAM！](https://arxiv.org/abs/1807.06521)
+
 ## 一. 论文摘要
 <font   color=black> 本文提出了卷积块注意模块(CBAM)，这是一个简单而有效的前馈卷积神经网络注意模块。在给定中间特征图的情况下，我们的模块按照通道和空间两个独立的维度依次推断注意图，然后将注意图乘入输入特征图进行自适应特征细化。因为CBAM是一个轻量级的通用模块，它可以无缝地集成到任何CNN架构中，开销可以忽略不计，并且可以与基本CNNs一起进行端到端的培训。我们通过在ImageNet-1K、MS COCO检测和VOC 2007检测数据集上的大量实验来验证我们的CBAM。我们的实验表明，在不同的模型下，分类和检测性能都得到了一致的提高，说明了CBAM的广泛适用性。
 
