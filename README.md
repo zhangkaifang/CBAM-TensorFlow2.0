@@ -1,6 +1,6 @@
 ## CBAM-TensorFlow2.0
-CBAM(Convolutional Block Attention Module) implementation on TensowFlow2.0
 
+- CBAM(Convolutional Block Attention Module) implementation on TensowFlow2.0
 - <font color=black> 本论文来自ECCV2018，主要在传统的CNN上引入通道注意力机制和空间注意力机制提升性能。论文地址：[CBAM！](https://arxiv.org/abs/1807.06521)
 
 ## 一. 论文摘要
@@ -18,7 +18,6 @@ $$ **其中：** $⊗$为element-wise multiplication，首先将channel attentio
 <center><image src="https://img-blog.csdnimg.cn/20200102234830810.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
      
     
- 
 ### 2.2. 通道注意力机制
 <font   color=black> 首先是通道注意力，我们知道一张图片经过几个卷积层会得到一个特征矩阵，这个矩阵的通道数就是卷积层核的个数。那么，一个常见的卷积核经常达到1024，2048个，并不是每个通道都对于信息传递非常有用了的。因此，通过对这些通道进行过滤，也就是注意，来得到优化后的特征。
 <font   color=black>**主要思路就是：增大有效通道权重，减少无效通道的权重。** 公式表示为如下：$$
