@@ -20,9 +20,7 @@
 - **其中：** <img src="https://latex.codecogs.com/gif.latex?$\bigotimes$" title="$\bigotimes$" />为element-wise multiplication，首先将channel attention map与输入的feature map相乘得到 <img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime}$" title="$\mathbf{F}^{\prime}$" />， 之后计算<img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime}$" title="$\mathbf{F}^{\prime}$" /> 的spatial attention map，并将两者相乘得到最终的输出 <img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime&space;\prime}$" title="$\mathbf{F}^{\prime \prime}$" />。
 
 ![](https://github.com/kobiso/CBAM-keras/blob/master/figures/overview.png?raw=true)
-
-
-     
+    
 
 ### 2.2. 通道注意力机制
 
@@ -35,7 +33,8 @@
 
 - **此外：** 共享网络是由一个隐藏层和多层感知机(MLP)组成。为了减少参数开销，隐藏的激活大小设置为 <img src="https://latex.codecogs.com/gif.latex?$\mathbb{R}^{C&space;/&space;r&space;\times&space;1&space;\times&space;1}$" title="$\mathbb{R}^{C / r \times 1 \times 1}$" />，其中 <img src="https://latex.codecogs.com/gif.latex?$r$" title="$r$" /> 是压缩率。在将共享网络应用于矢量之后，我们使用**逐元素求和**来合并输出特征向量。
 
-  <center><image src="https://img-blog.csdnimg.cn/20191230145340134.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
+
+![](https://img-blog.csdnimg.cn/20191230145340134.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70)
   
 - **注意：** 这里非常像SENet，SENet在很多论文中都被证实对效果有提升，这里的区别是，SENet采用的是平均值的pooling，这篇论文又加入了最大值pooling。作者在论文中，通过对比实验，证实max pooling提高了效果。这里的mlp的中间层较小，这个可能有助于信息的整合。
 
@@ -156,9 +155,10 @@ class ChannelAttention(layers.Layer):
 
 - **注意：** 这里同样使用了avg-pooling和max-pooling来对信息进行评估，使用一个 <img src="https://latex.codecogs.com/gif.latex?$7&space;\times&space;7$" title="$7 \times 7$" /> 的卷积来进行提取。注意权重都通过<font   color=blue>**sigmoid**来进行归一化</font>。
 
-<center><image src="https://img-blog.csdnimg.cn/2019123014591351.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70" width="100%">
 
-- <font   color=black><font   color=blue>**空间注意力模块代码(方式1)**</font>，推荐使用这种，这样喂入数据可以是None，就是可以自适应。
+![](https://img-blog.csdnimg.cn/2019123014591351.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2FiYzEzNTI2MjIyMTYw,size_16,color_FFFFFF,t_70)
+
+- <font   color=blue>**空间注意力模块代码(方式1)**</font>，推荐使用这种，这样喂入数据可以是None，就是可以自适应。
 
 
 ```powershell
