@@ -1,5 +1,5 @@
 
-## O. CBAM-TensorFlow2.0
+<h1 align="center"> CBAM-TensorFlow2.0 </h1>
 
 - CBAM(Convolutional Block Attention Module) implementation on TensowFlow2.0
 - 本论文来自ECCV2018，主要在传统的CNN上引入通道注意力机制和空间注意力机制提升性能。论文地址：[CBAM!](https://arxiv.org/abs/1807.06521)
@@ -19,7 +19,9 @@
 
 - **其中：** <img src="https://latex.codecogs.com/gif.latex?$\bigotimes$" title="$\bigotimes$" />为element-wise multiplication，首先将channel attention map与输入的feature map相乘得到 <img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime}$" title="$\mathbf{F}^{\prime}$" />， 之后计算<img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime}$" title="$\mathbf{F}^{\prime}$" /> 的spatial attention map，并将两者相乘得到最终的输出 <img src="https://latex.codecogs.com/gif.latex?$\mathbf{F}^{\prime&space;\prime}$" title="$\mathbf{F}^{\prime \prime}$" />。
 
-<center><image src="https://github.com/kobiso/CBAM-keras/blob/master/figures/overview.png?raw=true" width="100%">
+![](https://github.com/kobiso/CBAM-keras/blob/master/figures/overview.png?raw=true)
+
+
      
 
 ### 2.2. 通道注意力机制
