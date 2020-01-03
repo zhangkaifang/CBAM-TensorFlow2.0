@@ -24,10 +24,8 @@
 #### 2.2. 通道注意力机制
 
 首先是通道注意力，我们知道一张图片经过几个卷积层会得到一个特征矩阵，这个矩阵的通道数就是卷积层核的个数。那么，一个常见的卷积核经常达到1024，2048个，并不是每个通道都对于信息传递非常有用了的。因此，通过对这些通道进行过滤，也就是注意，来得到优化后的特征。
-<font   color=black>**主要思路就是：增大有效通道权重，减少无效通道的权重。** 公式表示为如下：
 
-![](https://img-blog.csdnimg.cn/20200103193107563.png)
-
+**主要思路就是：增大有效通道权重，减少无效通道的权重。** 公式表示为如下：
 
 <img src="https://latex.codecogs.com/gif.latex?$$\begin{aligned}&space;\mathbf{M}_{\mathbf{c}}(\mathbf{F})&space;&=\sigma(\text{MLP(AvgPool}(\mathbf{F}))&plus;\text{MLP}(\operatorname{MaxPool}&space;(\mathbf{F})))&space;\\&space;&=&space;\sigma\left(\mathbf{W}_{\mathbf{1}}(\mathbf{W}_{\mathbf{0}}(\mathbf{F}_{\text&space;{avg}}^{\mathbf{c}}))&plus;\mathbf{W}_{\mathbf{1}}\left(\mathbf{W}_{\mathbf{0}}\left(\mathbf{F}_{\max&space;}^{\mathbf{c}}\right)\right)\right)\tag{3}\end{aligned}$$" title="$$\begin{aligned} \mathbf{M}_{\mathbf{c}}(\mathbf{F}) &=\sigma(\text{MLP(AvgPool}(\mathbf{F}))+\text{MLP}(\operatorname{MaxPool} (\mathbf{F}))) \\ &= \sigma\left(\mathbf{W}_{\mathbf{1}}(\mathbf{W}_{\mathbf{0}}(\mathbf{F}_{\text {avg}}^{\mathbf{c}}))+\mathbf{W}_{\mathbf{1}}\left(\mathbf{W}_{\mathbf{0}}\left(\mathbf{F}_{\max }^{\mathbf{c}}\right)\right)\right)\tag{3}\end{aligned}$$" />
 
