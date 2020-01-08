@@ -722,6 +722,7 @@ Process finished with exit code 0
      
 ### 参考文献
 
+- loss = loss + tf.add_n(model.losses) + tf.add_n(fc_net.losses)
 - [luuuyi/CBAM.PyTorch](https://github.com/luuuyi/CBAM.PyTorch)
 - [kobiso/CBAM-keras](https://github.com/kobiso/CBAM-keras)
 - [Jongchan/attention-module](https://github.com/Jongchan/attention-module/tree/master/MODELS)
