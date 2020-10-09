@@ -85,7 +85,7 @@ def main():
                 avgpool = layers.GlobalAveragePooling2D()(out)
                 logits = fc_net(avgpool)
                 y_onehot = tf.one_hot(y, depth=100)
-                loss = tf.reduce_mean(tf.losses.categorical_crossentropy(y_onehot, logits, from_logits=True)
+                loss = tf.reduce_mean(tf.losses.categorical_crossentropy(y_onehot, logits, from_logits=True)）
                 loss = loss + tf.add_n(model.losses) + tf.add_n(fc_net.losses)
 
             # 梯度求解
