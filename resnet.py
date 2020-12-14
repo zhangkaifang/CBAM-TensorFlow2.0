@@ -1,8 +1,17 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+"""
+@author: kaifang zhang
+@license: Apache License
+@time: 2020/01
+@contact: kaifang.zkf@dtwave-inc.com
+第2个版本  2019-12-30  @devinzhang  更接近最真实的resnet18
+"""
+
 import tensorflow as tf
 from tensorflow.keras import layers, Sequential, regularizers
 import tensorflow.keras as keras
 
-""" 第2个版本  2019-12-30  @devinzhang  更接近最真实的resnet18 """
 
 #  定义一个3x3卷积！kernel_initializer='he_normal','glorot_normal'
 def regularized_padded_conv(*args, **kwargs):
@@ -10,13 +19,14 @@ def regularized_padded_conv(*args, **kwargs):
                          kernel_initializer='he_normal',
                          kernel_regularizer=regularizers.l2(5e-4))
 
+
 ############################### 通道注意力机制 ###############################
 class ChannelAttention(layers.Layer):
     def __init__(self, in_planes, ratio=16):
         super(ChannelAttention, self).__init__()
-        self.avg= layers.GlobalAveragePooling2D()
-        self.max= layers.GlobalMaxPooling2D()
-        self.conv1 = layers.Conv2D(in_planes//ratio, kernel_size=1, strides=1, padding='same',
+        self.avg = layers.GlobalAveragePooling2D()
+        self.max = layers.GlobalMaxPooling2D()
+        self.conv1 = layers.Conv2D(in_planes // ratio, kernel_size=1, strides=1, padding='same',
                                    kernel_regularizer=regularizers.l2(5e-4),
                                    use_bias=True, activation=tf.nn.relu)
         self.conv2 = layers.Conv2D(in_planes, kernel_size=1, strides=1, padding='same',
@@ -26,8 +36,8 @@ class ChannelAttention(layers.Layer):
     def call(self, inputs):
         avg = self.avg(inputs)
         max = self.max(inputs)
-        avg = layers.Reshape((1, 1, avg.shape[1]))(avg)   # shape (None, 1, 1 feature)
-        max = layers.Reshape((1, 1, max.shape[1]))(max)   # shape (None, 1, 1 feature)
+        avg = layers.Reshape((1, 1, avg.shape[1]))(avg)  # shape (None, 1, 1 feature)
+        max = layers.Reshape((1, 1, max.shape[1]))(max)  # shape (None, 1, 1 feature)
         avg_out = self.conv2(self.conv1(avg))
         max_out = self.conv2(self.conv1(max))
         out = avg_out + max_out
@@ -45,10 +55,11 @@ class SpatialAttention(layers.Layer):
     def call(self, inputs):
         avg_out = tf.reduce_mean(inputs, axis=3)
         max_out = tf.reduce_max(inputs, axis=3)
-        out = tf.stack([avg_out, max_out], axis=3)             # 创建一个维度,拼接到一起concat。
+        out = tf.stack([avg_out, max_out], axis=3)  # 创建一个维度,拼接到一起concat。
         out = self.conv1(out)
 
         return out
+
 
 # 1.定义 Basic Block 模块。对于Resnet18和Resnet34
 class BasicBlock(layers.Layer):
@@ -92,6 +103,7 @@ class BasicBlock(layers.Layer):
 
         return out
 
+
 ##############################################################
 # 1.定义 Bottleneck 模块。对于Resnet50,Resnet101和Resnet152;
 class Bottleneck(keras.Model):
@@ -105,7 +117,7 @@ class Bottleneck(keras.Model):
 
         self.conv2 = regularized_padded_conv(out_channels, 3, strides)
         self.bn2 = layers.BatchNormalization()
-        self.conv3 = regularized_padded_conv(out_channels*self.expansion, 1, 1)
+        self.conv3 = regularized_padded_conv(out_channels * self.expansion, 1, 1)
         self.bn3 = layers.BatchNormalization()
 
         if strides != 1 or in_channels != self.expansion * out_channels:
@@ -113,7 +125,7 @@ class Bottleneck(keras.Model):
                                                                 strides=strides),
                                         layers.BatchNormalization()])
         else:
-            self.shortcut = lambda x,_: x
+            self.shortcut = lambda x, _: x
 
     def call(self, x, training=False):
         out = tf.nn.relu(self.bn1(self.conv1(x), training))
@@ -124,6 +136,7 @@ class Bottleneck(keras.Model):
         out = tf.nn.relu(out)
 
         return out
+
 
 ##############################################################
 # 2. ResBlock 模块。继承keras.Model或者keras.Layer都可以
@@ -139,10 +152,10 @@ class ResNet(keras.Model):
                                 layers.BatchNormalization()])
 
         # 1. 创建4个ResBlock；注意第1项不一定以2倍形式扩张，都是比较随意的，这里都是经验值。
-        self.layer1 = self.build_resblock(blocks, 64,   layer_dims[0], stride=1)
-        self.layer2 = self.build_resblock(blocks, 128,  layer_dims[1], stride=2)
-        self.layer3 = self.build_resblock(blocks, 256,  layer_dims[2], stride=2)
-        self.layer4 = self.build_resblock(blocks, 512,  layer_dims[3], stride=2)
+        self.layer1 = self.build_resblock(blocks, 64, layer_dims[0], stride=1)
+        self.layer2 = self.build_resblock(blocks, 128, layer_dims[1], stride=2)
+        self.layer3 = self.build_resblock(blocks, 256, layer_dims[2], stride=2)
+        self.layer4 = self.build_resblock(blocks, 512, layer_dims[3], stride=2)
         # self.final_bn  = layers.BatchNormalization()
 
         # self.avgpool = layers.GlobalAveragePooling2D()
@@ -150,7 +163,7 @@ class ResNet(keras.Model):
 
     # 2. 创建ResBlock
     def build_resblock(self, blocks, out_channels, num_blocks, stride):
-        strides = [stride] + [1] * (num_blocks - 1)                    # [1]*3 = [1, 1, 1]
+        strides = [stride] + [1] * (num_blocks - 1)  # [1]*3 = [1, 1, 1]
         res_blocks = Sequential()
 
         for stride in strides:
@@ -159,7 +172,7 @@ class ResNet(keras.Model):
 
         return res_blocks
 
-    def call(self,inputs, training=False):
+    def call(self, inputs, training=False):
         # __init__中准备工作完毕；下面完成前向运算过程。
         out = self.stem(inputs, training)
         out = tf.nn.relu(out)
@@ -178,27 +191,39 @@ class ResNet(keras.Model):
 
         return out
 
+
 ##############################################################
 """ Resnet18 """
+
+
 def ResNet18():
     return ResNet(BasicBlock, [2, 2, 2, 2])
 
+
 """ ResNet-34，那34是怎样的配置呢？只需要改一下这里就可以了。4个Res Block """
+
+
 # 如果我们要使用
 def ResNet34():
     return ResNet(BasicBlock, [3, 4, 6, 3])
 
+
 """ Resnet50 """
+
+
 def ResNet50():
     return ResNet(Bottleneck, [3, 4, 6, 3])
 
+
 """ Resnet101 """
+
+
 def ResNet101():
     return ResNet(Bottleneck, [3, 4, 23, 3])
 
+
 """ Resnet152 """
+
+
 def ResNet152():
     return ResNet(Bottleneck, [3, 8, 36, 3])
-
-
-
