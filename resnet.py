@@ -5,7 +5,6 @@
 @license: Apache License
 @time: 2020/01
 @contact: kaifang.zkf@dtwave-inc.com
-第2个版本  2019-12-30  @devinzhang  更接近最真实的resnet18
 """
 
 import tensorflow as tf
