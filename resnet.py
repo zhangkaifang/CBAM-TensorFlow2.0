@@ -4,22 +4,28 @@
 @author: kaifang zhang
 @license: Apache License
 @time: 2020/12/01
-@contact: kaifang.zkf@dtwave-inc.com
+@contact: 1115291605@qq.com
 """
 
 import tensorflow as tf
-from tensorflow.keras import layers, Sequential, regularizers
 import tensorflow.keras as keras
+from tensorflow.keras import layers, Sequential, regularizers
 
 
-#  定义一个3x3卷积！kernel_initializer='he_normal','glorot_normal'
 def regularized_padded_conv(*args, **kwargs):
-    return layers.Conv2D(*args, **kwargs, padding='same', use_bias=False,
-                         kernel_initializer='he_normal',
+    """
+    定义一个3x3卷积！kernel_initializer='he_normal','glorot_normal'
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    return layers.Conv2D(*args, **kwargs, padding='same', use_bias=False, kernel_initializer='he_normal',
                          kernel_regularizer=regularizers.l2(5e-4))
 
 
-############################### 通道注意力机制 ###############################
+"""通道注意力机制"""
+
+
 class ChannelAttention(layers.Layer):
     def __init__(self, in_planes, ratio=16):
         super(ChannelAttention, self).__init__()
@@ -45,7 +51,9 @@ class ChannelAttention(layers.Layer):
         return out
 
 
-############################### 空间注意力机制 ###############################
+"""空间注意力机制"""
+
+
 class SpatialAttention(layers.Layer):
     def __init__(self, kernel_size=7):
         super(SpatialAttention, self).__init__()
@@ -60,7 +68,9 @@ class SpatialAttention(layers.Layer):
         return out
 
 
-# 1.定义 Basic Block 模块。对于Resnet18和Resnet34
+"""定义 Basic Block 模块。对于Resnet18和Resnet34"""
+
+
 class BasicBlock(layers.Layer):
     expansion = 1
 
@@ -103,8 +113,9 @@ class BasicBlock(layers.Layer):
         return out
 
 
-##############################################################
-# 1.定义 Bottleneck 模块。对于Resnet50,Resnet101和Resnet152;
+"""1.定义 Bottleneck 模块。对于Resnet50,Resnet101和Resnet152"""
+
+
 class Bottleneck(keras.Model):
     expansion = 4
 
@@ -137,8 +148,9 @@ class Bottleneck(keras.Model):
         return out
 
 
-##############################################################
-# 2. ResBlock 模块。继承keras.Model或者keras.Layer都可以
+"""2. ResBlock 模块。继承keras.Model或者keras.Layer都可以"""
+
+
 class ResNet(keras.Model):
 
     # 第1个参数layer_dims：[2, 2, 2, 2] 4个Res Block，每个包含2个Basic Block，第3参数num_classes：我们的全连接输出，取决于输出有多少类。
@@ -191,38 +203,41 @@ class ResNet(keras.Model):
         return out
 
 
-##############################################################
-""" Resnet18 """
-
-
 def ResNet18():
+    """
+    Resnet18
+    :return:
+    """
     return ResNet(BasicBlock, [2, 2, 2, 2])
 
 
-""" ResNet-34，那34是怎样的配置呢？只需要改一下这里就可以了。4个Res Block """
-
-
-# 如果我们要使用
 def ResNet34():
+    """
+    ResNet-34，那34是怎样的配置呢？只需要改一下这里就可以了。4个Res Block
+    :return:
+    """
     return ResNet(BasicBlock, [3, 4, 6, 3])
 
 
-""" Resnet50 """
-
-
 def ResNet50():
+    """
+    Resnet50
+    :return:
+    """
     return ResNet(Bottleneck, [3, 4, 6, 3])
 
 
-""" Resnet101 """
-
-
 def ResNet101():
+    """
+    Resnet101
+    :return:
+    """
     return ResNet(Bottleneck, [3, 4, 23, 3])
 
 
-""" Resnet152 """
-
-
 def ResNet152():
+    """
+    Resnet152
+    :return:
+    """
     return ResNet(Bottleneck, [3, 8, 36, 3])

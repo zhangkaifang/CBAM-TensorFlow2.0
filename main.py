@@ -4,46 +4,60 @@
 @author: kaifang zhang
 @license: Apache License
 @time: 2020/12/01
-@contact: kaifang.zkf@dtwave-inc.com
+@contact: 1115291605@qq.com
 """
 
+import random
+import numpy as np
 import tensorflow as tf
 from tensorflow.keras import layers, optimizers, datasets, Sequential, regularizers
 from resnet import ResNet18
-import numpy as np
-import random
 
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 tf.random.set_seed(2345)
-batchsz = 256
 
 # 1. 归一化函数实现；cifar100 均值和方差，自己计算的。
 img_mean = tf.constant([0.50736203482434500, 0.4866895632914611, 0.4410885713465068])
 img_std = tf.constant([0.26748815488001604, 0.2565930997269337, 0.2763085095510783])
+batchsz = 256
 
 
 def normalize(x, mean=img_mean, std=img_std):
+    """
+    归一化
+    :param x:
+    :param mean:
+    :param std:
+    :return:
+    """
     x = (x - mean) / std
     return x
 
 
-# 2. 数据预处理，仅仅是类型的转换。    [-1~1]
 def preprocess(x, y):
+    """
+    数据预处理，仅仅是类型的转换。[-1~1]
+    :param x:
+    :param y:
+    :return:
+    """
     x = tf.pad(x, [[4, 4], [4, 4], [0, 0]])  # 上下填充4个0，左右填充4个0，变为[40, 40, 3]
     x = tf.image.random_crop(x, [32, 32, 3])
     x = tf.image.random_flip_left_right(x)
-    # x: [0,255]=> -1~1   其次：normalizaion
-    x = tf.cast(x, dtype=tf.float32) / 255.
-    # 0~1 => D(0,1) 调用函数；
-    x = normalize(x)
+    x = tf.cast(x, dtype=tf.float32) / 255.  # x: [0,255]=> -1~1   其次：normalizaion
+    x = normalize(x)  # 0~1 => D(0,1) 调用函数；
     y = tf.cast(y, dtype=tf.int32)
     return x, y
 
 
-# 3. 学习率调整测率200epoch
 def lr_schedule_300ep(epoch):
+    """
+    学习率调整测率200epoch
+    :param epoch:
+    :return:
+    """
     if epoch < 60:
         return 0.1
     if epoch < 120:
@@ -75,12 +89,14 @@ test_db = test_db.map(preprocess).batch(batchsz)
 
 # 我们来取一个样本，测试一下sample的形状。
 sample = next(iter(train_db))
-print('sample:', sample[0].shape, sample[1].shape,
-      tf.reduce_min(sample[0]),
-      tf.reduce_max(sample[0]))  # 值范围为[0,1]
+print('sample:', sample[0].shape, sample[1].shape, tf.reduce_min(sample[0]), tf.reduce_max(sample[0]))  # 值范围为[0,1]
 
 
 def main():
+    """
+    主函数
+    :return:
+    """
     # 输入：[b, 32, 32, 3]
     model = ResNet18()
     model.build(input_shape=(None, 32, 32, 3))
